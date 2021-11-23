@@ -1209,8 +1209,10 @@ else
     disp('dist_res = different')
 end
 % perform multiple comparison test
-[c, m, hmc] = multcompare(stats, 'Display', 'off');
+figure
+[c, m, hmc] = multcompare(stats);
 hmc.CurrentAxes.YTickLabel = flip(PMpair);
+hmc.Name = 'Comparison : All';
 
 % chi test for mean rank
 % statistic from [Lee+, 2013]
@@ -1414,6 +1416,27 @@ for si = 1:6
         '\fontsize{14} \rm (ex: if A is Rank1 & B is Rank4, difference in ranking is 3)'},...
         'FontSize', 24,...
         'FontWeight', 'bold')
+        
+    % prepare data matrix for anova
+    tndata = size(tdMatrix,3);
+    data_anova = zeros(tndata, nchoosek(6,2));
+    cpairi = 0;
+    for tsi = 1:6
+        for tsj = 1:6
+            if tsi < tsj
+                cpairi = cpairi + 1;
+                data_anova(:, cpairi) = squeeze(tdMatrix(tsi,tsj,:));
+            end
+        end
+    end
+    % perform anova for ranking difference
+    alpha = 0.05;
+    [~,~,stats] = anova1(data_anova,[],'off');
+    % perform multiple comparison test
+    figure
+    [c, m, hmc] = multcompare(stats);
+    hmc.CurrentAxes.YTickLabel = flip(PMpair);
+    hmc.Name = ['Comparison : ', PM{si}];
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
