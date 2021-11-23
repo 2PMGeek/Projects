@@ -1163,6 +1163,12 @@ writematrix(dataFrame,'rankdata.csv')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Computations and Tests
+% number of unique responses
+nUniqueR = sum(dataFrame(:,7)~=0);
+mostR = dataFrame(dataFrame(:,7) == max(dataFrame(:,7)),1:6);
+mostRN = max(dataFrame(:,7));
+disp(['no. of unique ranking = ', num2str(nUniqueR)])
+
 % compute mean of ranking difference
 meanDist = mean(dMatrix, 3);
 meanDist = tril(meanDist);
